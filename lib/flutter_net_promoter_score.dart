@@ -29,6 +29,8 @@ import 'model/nps_survey_page.dart';
 /// Use `theme` parameter to customize the look and feel of the survey. change font and colors using [ThemeData] object
 ///
 /// Use `thankYouIcon` parameter to provide a your own [Widget] for the Thank You view image
+///
+/// Use `thankYouButtons` parameter to provide a buttons at the very end.
 /// ```dart
 /// showNetPromoterScore(
 ///   context: context,
@@ -69,6 +71,7 @@ Future showNetPromoterScore<T>({
   Function(NetPromoterScoreResult result)? onSurveyCompleted,
   NpsSurveyTexts texts = const NpsSurveyTexts(),
   Widget? thankYouIcon,
+  NpsThankYouPageButtons? thankYouButtons,
 }) {
   bool currentlyShowingSurvey = true;
 
@@ -87,22 +90,26 @@ Future showNetPromoterScore<T>({
           // call survey completion block
           if (onSurveyCompleted != null) onSurveyCompleted(result);
 
-          // Dismiss after delay
-          Future.delayed(
-            const Duration(milliseconds: 2000),
-            () {
-              // Check if the user didn't dismiss the modal view manually by him self
-              if (currentlyShowingSurvey) {
-                Navigator.pop(context);
-              }
-            },
-          );
+          // Dismiss after delay, if no buttons.
+          if (!result.buttonsShown) {
+            Future.delayed(
+              const Duration(milliseconds: 2000),
+              () {
+                // Check if the user didn't dismiss the modal view manually by him self
+
+                if (currentlyShowingSurvey) {
+                  Navigator.pop(context);
+                }
+              },
+            );
+          }
         },
         onScoreChanged: onScoreChanged,
         onFeedbackChanged: onFeedbackChanged,
         texts: texts,
         theme: theme == null ? Theme.of(context) : theme,
         thankYouIcon: thankYouIcon,
+        thankYouButtons: thankYouButtons,
       );
     },
   );
@@ -122,6 +129,7 @@ class FlutterNetPromoterScore extends StatefulWidget {
   final Function(String newFeedback)? onFeedbackChanged;
   final ThemeData? theme;
   final Widget? thankYouIcon;
+  final NpsThankYouPageButtons? thankYouButtons;
 
   FlutterNetPromoterScore({
     this.onSurveyCompleted,
@@ -131,6 +139,7 @@ class FlutterNetPromoterScore extends StatefulWidget {
     this.theme,
     this.texts = const NpsSurveyTexts(),
     this.thankYouIcon,
+    this.thankYouButtons,
   });
 
   @override
@@ -159,8 +168,10 @@ class FlutterNetPromoterScoreState extends State<FlutterNetPromoterScore> {
 
   Widget _npsThankYouWidgetBuilder() {
     return NpsThankYouWidget(
+      score: _currentScore,
       texts: this.widget.texts.thankYouPageTexts,
       thankYouIcon: this.widget.thankYouIcon,
+      buttons: this.widget.thankYouButtons,
     );
   }
 

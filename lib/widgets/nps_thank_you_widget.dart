@@ -2,10 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_net_promoter_score/model/nps_survey_texts.dart';
 
 class NpsThankYouWidget extends StatefulWidget {
-  final NpsThankYouPageTexts? texts;
+  final NpsThankYouPageTexts texts;
+  final NpsThankYouPageButtons? buttons;
+  final int? score;
   final Widget? thankYouIcon;
 
-  NpsThankYouWidget({super.key, this.texts, this.thankYouIcon});
+  get showButtons =>
+      buttons != null &&
+      score != null &&
+      score! > buttons!.showButtonsWhenRatingAtLeast;
+
+  NpsThankYouWidget({
+    super.key,
+    required this.texts,
+    required this.score,
+    this.thankYouIcon,
+    this.buttons,
+  });
 
   @override
   NpsThankYouWidgetState createState() => new NpsThankYouWidgetState();
@@ -25,7 +38,6 @@ class NpsThankYouWidgetState extends State<NpsThankYouWidget> {
               ),
             ],
           ),
-          // Icon(Icon.asset("name")),
           Container(
             child: FittedBox(
               child: this.widget.thankYouIcon == null
@@ -40,9 +52,33 @@ class NpsThankYouWidgetState extends State<NpsThankYouWidget> {
             height: 5,
           ),
           Text(
-            this.widget.texts?.thankYouLabelText ?? '',
+            this.widget.showButtons
+                ? this.widget.texts.thankYouButtonsLabelText
+                : this.widget.texts.thankYouLabelText,
             style: Theme.of(context).textTheme.titleSmall,
           ),
+          if (this.widget.showButtons)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: this.widget.buttons!.thankYouButtonCancelStyle,
+                    child: this.widget.buttons!.thankYouButtonCancelContent,
+                  ),
+                  TextButton(
+                    onPressed: () => {
+                      this.widget.buttons!.thankYouButtonAction(),
+                      Navigator.pop(context)
+                    },
+                    style: this.widget.buttons!.thankYouButtonStyle,
+                    child: this.widget.buttons!.thankYouButtonContent,
+                  ),
+                ],
+              ),
+            ),
           SizedBox(
             height: 10,
           ),

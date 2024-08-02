@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class NpsSelectScorePageTexts {
   final String surveyQuestionText;
   final String detractorScoreLabelText;
@@ -40,9 +42,30 @@ class NpsFeedbackPageTexts {
 
 class NpsThankYouPageTexts {
   final String thankYouLabelText;
+  final String thankYouButtonsLabelText;
 
   const NpsThankYouPageTexts({
     this.thankYouLabelText = "Thanks for your feedback!",
+    this.thankYouButtonsLabelText =
+        "Wow, thanks for the great score. If you could rate us below as well, that'd be awesome.",
+  });
+}
+
+class NpsThankYouPageButtons {
+  final int showButtonsWhenRatingAtLeast;
+  final Widget thankYouButtonContent;
+  final Function() thankYouButtonAction;
+  final ButtonStyle? thankYouButtonStyle;
+  final Widget thankYouButtonCancelContent;
+  final ButtonStyle? thankYouButtonCancelStyle;
+
+  const NpsThankYouPageButtons({
+    required this.showButtonsWhenRatingAtLeast,
+    required this.thankYouButtonContent,
+    required this.thankYouButtonAction,
+    this.thankYouButtonStyle,
+    required this.thankYouButtonCancelContent,
+    this.thankYouButtonCancelStyle,
   });
 }
 
