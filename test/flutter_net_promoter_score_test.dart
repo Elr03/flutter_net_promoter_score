@@ -1,6 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_net_promoter_score/flutter_net_promoter_score.dart';
 
 void main() {
   // test('adds one to input values', () {

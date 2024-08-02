@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_net_promoter_score/model/nps_survey_texts.dart';
 
 class NpsThankYouWidget extends StatefulWidget {
-  final NpsThankYouPageTexts texts;
-  final Widget thankYouIcon;
+  final NpsThankYouPageTexts? texts;
+  final Widget? thankYouIcon;
 
-  NpsThankYouWidget({
-    Key key,
-    this.texts,
-    this.thankYouIcon,
-  })  : assert(texts != null),
-        super(key: key);
+  NpsThankYouWidget({super.key, this.texts, this.thankYouIcon});
 
   @override
   NpsThankYouWidgetState createState() => new NpsThankYouWidgetState();
@@ -45,8 +40,8 @@ class NpsThankYouWidgetState extends State<NpsThankYouWidget> {
             height: 5,
           ),
           Text(
-            this.widget.texts.thankYouLabelText,
-            style: Theme.of(context).textTheme.subtitle2,
+            this.widget.texts?.thankYouLabelText ?? '',
+            style: Theme.of(context).textTheme.titleSmall,
           ),
           SizedBox(
             height: 10,

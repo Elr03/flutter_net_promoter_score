@@ -3,25 +3,24 @@ import 'package:flutter_net_promoter_score/model/nps_survey_texts.dart';
 import 'package:flutter_net_promoter_score/model/promoter_type.dart';
 
 class NpsFeedbackWidget extends StatefulWidget {
-  final String feedbackText;
-  final VoidCallback onClosePressed;
-  final VoidCallback onEditScoreButtonPressed;
-  final VoidCallback onSendButtonPressed;
-  final PromoterType promoterType;
-  final Function(String feedbackText) onFeedbackTextChanged;
   final NpsFeedbackPageTexts texts;
+  final String? feedbackText;
+  final VoidCallback? onClosePressed;
+  final VoidCallback? onEditScoreButtonPressed;
+  final VoidCallback? onSendButtonPressed;
+  final PromoterType? promoterType;
+  final Function(String feedbackText)? onFeedbackTextChanged;
 
   NpsFeedbackWidget({
-    Key key,
-    @required this.texts,
+    super.key,
+    required this.texts,
     this.onEditScoreButtonPressed,
     this.onClosePressed,
     this.onSendButtonPressed,
     this.onFeedbackTextChanged,
     this.feedbackText,
     this.promoterType,
-  })  : assert(texts != null),
-        super(key: key);
+  });
 
   @override
   NpsFeedbackWidgetState createState() => new NpsFeedbackWidgetState();
@@ -34,30 +33,28 @@ class NpsFeedbackWidgetState extends State<NpsFeedbackWidget> {
   void initState() {
     super.initState();
     _feedbackTextFieldController.addListener(_feedbackTextChanged);
-    _feedbackTextFieldController.text = this.widget.feedbackText;
+    _feedbackTextFieldController.text = this.widget.feedbackText ?? '';
   }
 
   void _feedbackTextChanged() {
-    this.widget.onFeedbackTextChanged(_feedbackTextFieldController.text);
+    if (this.widget.onFeedbackTextChanged != null)
+      this.widget.onFeedbackTextChanged!(_feedbackTextFieldController.text);
   }
 
   String _hintTextForFeedbackTextField() {
     String hintText = this.widget.texts.passiveFeedbackTextFieldPlaceholderText;
-    if (this.widget.promoterType != null) {
-      switch (this.widget.promoterType) {
-        case PromoterType.detractor:
-          hintText =
-              this.widget.texts.detractorFeedbackTextFieldPlaceholderText;
-          break;
-        case PromoterType.passive:
-          hintText = this.widget.texts.passiveFeedbackTextFieldPlaceholderText;
-          break;
-        case PromoterType.promoter:
-          hintText = this.widget.texts.promoterFeedbackTextFieldPlaceholderText;
-          break;
-        default:
-          hintText = this.widget.texts.passiveFeedbackTextFieldPlaceholderText;
-      }
+    switch (this.widget.promoterType) {
+      case PromoterType.detractor:
+        hintText = this.widget.texts.detractorFeedbackTextFieldPlaceholderText;
+        break;
+      case PromoterType.passive:
+        hintText = this.widget.texts.passiveFeedbackTextFieldPlaceholderText;
+        break;
+      case PromoterType.promoter:
+        hintText = this.widget.texts.promoterFeedbackTextFieldPlaceholderText;
+        break;
+      default:
+        hintText = this.widget.texts.passiveFeedbackTextFieldPlaceholderText;
     }
     return hintText;
   }
@@ -126,9 +123,8 @@ class NpsFeedbackWidgetState extends State<NpsFeedbackWidget> {
                           padding: new EdgeInsets.all(0.0),
                           icon: new Icon(Icons.clear, size: 22.0),
                           onPressed: () {
-                            if (this.widget.onClosePressed != null) {
-                              this.widget.onClosePressed();
-                            }
+                            if (this.widget.onClosePressed != null)
+                              this.widget.onClosePressed!();
                           }),
                     )
                   ],
@@ -140,7 +136,7 @@ class NpsFeedbackWidgetState extends State<NpsFeedbackWidget> {
             ),
             Text(
               _mainTextAccordingToPromoterType(),
-              style: Theme.of(context).textTheme.subtitle2,
+              style: Theme.of(context).textTheme.titleSmall,
               textAlign: TextAlign.center,
             ),
             SizedBox(
@@ -158,11 +154,12 @@ class NpsFeedbackWidgetState extends State<NpsFeedbackWidget> {
                   onPressed: () {
                     // Dismiss keyboard first
                     FocusScope.of(context).requestFocus(new FocusNode());
-                    this.widget.onEditScoreButtonPressed();
+                    if (this.widget.onEditScoreButtonPressed != null)
+                      this.widget.onEditScoreButtonPressed!();
                   },
                   child: Text(
                     this.widget.texts.editScoreButtonText,
-                    style: Theme.of(context).textTheme.button,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                   minWidth: 150,
                   height: 45,
@@ -175,13 +172,14 @@ class NpsFeedbackWidgetState extends State<NpsFeedbackWidget> {
                   onPressed: () {
                     // Dismiss keyboard first
                     FocusScope.of(context).requestFocus(new FocusNode());
-                    this.widget.onSendButtonPressed();
+                    if (this.widget.onSendButtonPressed != null)
+                      this.widget.onSendButtonPressed!();
                   },
                   child: Text(
                     this.widget.texts.submitButtonText,
-                    style: Theme.of(context).textTheme.button,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
-                  color: Theme.of(context).buttonColor,
+                  color: Theme.of(context).buttonTheme.colorScheme?.primary,
                   minWidth: 150,
                   height: 45,
                   splashColor: Colors.transparent,
